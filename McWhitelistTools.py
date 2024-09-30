@@ -61,6 +61,18 @@ class McWhitelistTools:
             return True
         else:
             return False
+            
+    def uuidExists(self, uuid):
+        for entry in self.whitelist:
+            if entry['uuid'] == uuid:
+                return True
+        return False
+        
+    def nameExists(self, name):
+        for entry in self.whitelist:
+            if entry['name'] == name:
+                return True
+        return False
     
     # Reloads the list from stored state
     def dropChanges(self):
@@ -69,7 +81,7 @@ class McWhitelistTools:
                 self.whitelist = json.load(f)
         except:
             print("[McWhitelistTools/WARN] Could not find existing whitelist")
-            self.clear(self)
+            self.clearAll(self)
 
     # Saves the stored list and all changes
     def writeChanges(self):
