@@ -14,4 +14,5 @@ class FloodgateWhitelistTools:
             uuid = UUID(response['floodgateuid'])
             return str(uuid)
         except:
+            print(f"[McWhitelistTools/WARN] could not find user {username}, skipping...")
             return None

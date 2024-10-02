@@ -31,6 +31,7 @@ class McWhitelistTools:
                 self.whitelist.remove(entry)
             return True
         else:
+            print(f"[McWhitelistTools/INFO] {username} not in list, skipping delete...")
             return False
         
     # Adds a user by looking up the users UUID, similar to how 'minecraft:whitelist add' does
@@ -81,7 +82,7 @@ class McWhitelistTools:
                 self.whitelist = json.load(f)
         except:
             print("[McWhitelistTools/WARN] Could not find existing whitelist")
-            self.clearAll(self)
+            self.clearAll()
 
     # Saves the stored list and all changes
     def writeChanges(self):
