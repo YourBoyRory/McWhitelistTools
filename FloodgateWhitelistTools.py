@@ -4,8 +4,9 @@ from uuid import UUID
 class FloodgateWhitelistTools:
 
     headers = {'x-api-key': None}
-
+    
     def __init__(self, API_key):
+        # mcprofile.io api key
         self.headers['x-api-key'] = API_key
 
     def getXUID(self, username):
