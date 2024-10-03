@@ -13,6 +13,14 @@ class McWhitelistTools:
     def clearAll(self):
         self.whitelist = []
     
+    # Adds a user by looking up the users UUID, similar to how 'minecraft:whitelist add' does
+    # returns in the user was added and the looked up UUID
+    def addByName(self, username):
+        uuid = self.getUUID(username)
+        if uuid is not None or username is not None:
+            return self.addEntry(username, uuid), uuid
+        return False, uuid
+    
     # Removed all entries with that name
     def removeByName(self, username):
         count = 0
@@ -34,14 +42,6 @@ class McWhitelistTools:
             print(f"[McWhitelistTools/INFO] {username} not in list, skipping delete...")
             return False
         
-    # Adds a user by looking up the users UUID, similar to how 'minecraft:whitelist add' does
-    def addByName(self, username):
-        uuid = self.getUUID(username)
-        if uuid is not None or username is not None:
-            self.addEntry(username, uuid)
-            return True
-        return False
-        
     # Removed all entries with that uuid
     def removeByUUID(self, uuid):
         count = 0
@@ -61,6 +61,7 @@ class McWhitelistTools:
                 self.whitelist.remove(entry)
             return True
         else:
+            print(f"[McWhitelistTools/INFO] {uuid} not in list, skipping delete...")
             return False
             
     def uuidExists(self, uuid):
@@ -100,14 +101,16 @@ class McWhitelistTools:
         entry['name'] = username
         temp = [None]
         temp[0] = entry
-        for entry in self.whitelist:
-            if entry['uuid'] == uuid:
-                return 
+        if self.uuidExists(uuid):
+            print(f"[McWhitelistTools/WARN] {username} already in list, skipping...")
+            return False
         self.whitelist += temp
+        return True
         
-    # adds an entry to the list
+    # removes an entry to the list
     def removeEntry(self, username, uuid):
         entriesRemoved = False
+        # doesnt use nameExists() or uuidExists() to be more efficient
         for entry in self.whitelist:
             if entry['name'] == username and entry['uuid'] == uuid:
                 self.whitelist.remove(entry)
@@ -123,6 +126,18 @@ class McWhitelistTools:
         except:
             print(f"[McWhitelistTools/WARN] could not find user {username}, skipping...")
             return None
+
+    def getNameFromList(self, uuid):
+        for entry in self.whitelist:
+            if entry['uuid'] == uuid:
+                return entry['name']
+        return None
+    
+    def getUUIDFromList(self, name):
+        for entry in self.whitelist:
+            if entry['name'] == name:
+                return entry['uuid']
+        return None
     
     # returns a prettied list
     def getList(self):
